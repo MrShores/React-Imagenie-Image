@@ -1,0 +1,34 @@
+.ImageGrid {
+    padding: 100px 20px 20px;
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+
+.ImageGrid > div {
+    flex: 1 1 25%;
+    max-width: 25%;
+}
+
+@media (max-width: 1000px){
+    .ImageGrid > div {
+        flex: 1 1 33.333%;
+        max-width: 33.333%;
+    }
+}
+
+@media (max-width: 800px){
+    .ImageGrid > div {
+        flex: 1 1 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 500px){
+    .ImageGrid > div {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}

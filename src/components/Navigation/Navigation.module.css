@@ -1,0 +1,43 @@
+.Navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: #F7F5FA;
+    box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.2),
+                0 6px 12px 4px rgba(0, 0, 0, 0.05);
+    padding: 0 20px;
+    z-index: 500;
+}
+
+.Button {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    position: absolute;
+    border: 0;
+    top: 12px;
+    right: 70px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9c80c7;
+}
+
+.Button span {
+    background: #ebe8f1;
+    font-size: 13px;
+    
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.Button.HasFavorites span {
+    background: #937cc1;
+    color: white;
+}

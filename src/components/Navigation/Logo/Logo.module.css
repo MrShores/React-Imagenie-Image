@@ -1,0 +1,8 @@
+.Logo {
+    display: inline-block;
+    padding: 12px 12px 9px;
+}
+
+.Logo svg {
+    display: block;
+}
