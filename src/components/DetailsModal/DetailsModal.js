@@ -1,52 +1,105 @@
 import React, { Component } from 'react';
 import classes from './DetailsModal.module.css';
+import { Transition, Spring } from 'react-spring/renderprops';
+import DetailsInfo from './DetailsInfo';
+import Aux from '../../hoc/Auxiliary';
 
 class DetailsModal extends Component {
 
-    /**
-     * Convert value to short string w/ units
-     *  - value of 12,345 => 12.3mil
-     *  - value of 1,234,000 => 1.2mil
-     *  - value of 123,456,000 => 123.5mil
-     */
-    niceNumber = (number) => {
-        console.log(number);
-        let niceNumber = null;
-        if( !number ){
-            niceNumber = '';
-        } else if( number < 1000 ){
-            niceNumber = number;
-        } else if ( number < 10**6 ){ // < million
-            niceNumber = (number / 10**3).toFixed(1) + 'k';
-        } else if ( number < 10**9 ){ // < billion
-            niceNumber = (number / 10**6 ).toFixed(1) + 'mil';
-        } else if ( number < 10**12 ){ // < trillion
-            niceNumber = (number / 10**9 ).toFixed(1) + 'bil';
-        } else {
-            niceNumber = 'O_o';
-        }
-        return niceNumber;
+    constructor(props) {
+        super(props);
+        this.state = {
+            winWidth: window.innerWidth,
+            winHeight: window.innerHeight,
+        };
+        this.getWindowDimensions = this.getWindowDimensions.bind(this);
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this.getWindowDimensions);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.getWindowDimensions);
+    }
+
+    getWindowDimensions() {
+        this.setState({
+            winWidth: window.innerWidth,
+            winHeight: window.innerHeight,
+        });
     }
 
     render() {
+
+        let show = this.props.show;
+
+        // Override show if should doClosing
+        if( this.props.doClosing ){
+            show = false;
+        }
+
         const image = this.props.image;
 
-        const cls = this.props.image === {}
-            ? [classes.DetailsModal]
-            : [classes.DetailsModal, classes.Open]
+        /**
+         * Get values for FLIP animation for .Details <div>
+         */
+        let imageNode = null;
+        let start = {};
+        let end = {};
+
+        const padding = this.state.winWidth < 1000 ? 10 : 15;
+
+        if( this.props.imageNode !== null ){
+            imageNode = this.props.imageNode.getBoundingClientRect();
+
+            start = {
+                left: imageNode.x + padding,
+                top: imageNode.y + padding,
+                width: imageNode.width - padding * 2,
+                height: imageNode.height - padding * 2,
+            };
+            end = {
+                left: (this.state.winWidth - 400) / 2,
+                top: (this.state.winHeight - 266) / 2 - 25,
+                width: 400,
+                height: 266,
+            };
+        }
 
         return (
-            <div className={cls.join(' ')}>
-                <h3>{image.name}</h3>
-                <a href={`https://unsplash.com/${image.at}`}
-                    target="_blank" rel="noopener noreferrer">{image.at}</a>
-                <div className={classes.Number}>
-                    VIEWS <span>{this.niceNumber(image.views)}</span>
-                </div>
-                <div className={classes.Number}>
-                    DOWNLOADS <span>{this.niceNumber(image.downloads)}</span>
-                </div>
-            </div>
+            <Transition
+                items={show}
+                from={start}
+                enter={end}
+                leave={start}
+                onDestroyed={this.props.onDestroyed}>
+                {trans => trans && (props => (
+                    <div className={classes.DetailsModal} style={props}>
+
+                        {image !== null ? (
+                            <Aux>
+                                <img src={image.images.thumb} alt="" />
+                                <DetailsInfo
+                                    show={show}
+                                    image={image}
+                                    favoriteClick={this.props.favoriteClick} />
+                            </Aux>
+                        ) : null}
+
+                        <Spring
+                            from={{opacity: show ? 0 : 1}}
+                            to={{opacity: show ? 1 : 0}}>
+                            {props => (
+                                <button
+                                    style={props}
+                                    className={classes.Close}
+                                    onClick={this.props.closeClick}>Close</button>
+                            )}
+                        </Spring>
+                    </div>
+                ))}
+            </Transition>
         );
     }
 };
