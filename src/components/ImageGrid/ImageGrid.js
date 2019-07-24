@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './ImageGrid.module.css';
-import Image from './Image/Image';
+import Image from './Image';
 
 const imageGrid = (props) => {
 
@@ -9,6 +9,7 @@ const imageGrid = (props) => {
             <Image
                 key={image.id}
                 id={image.id}
+                hide={image.id === props.activeImageID}
                 thumb={image.images.thumb}
                 click={props.imageClick} />
         );

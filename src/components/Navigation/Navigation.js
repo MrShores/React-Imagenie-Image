@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import classes from './Navigation.module.css';
-import Logo from './Logo/Logo';
+import Logo from './Logo';
 
-const navigation = (props) => {
+class Navigation extends Component {
 
-    const count = props.favoriteCount !== 0 ? props.favoriteCount : '';
+    shouldComponentUpdate = (nextProps, nextState) => {
+        if( nextProps.favoriteCount !== this.props.favoriteCount ){
+            return true;
+        }
+        return false;
+    };
 
-    return (
-        <nav className={classes.Navigation}>
-            <Logo />
-            <button className={classes.Button}>
-                Favorites <span>{count}</span>
-            </button>
-        </nav>
-    );
+    render() {
+   
+        return (
+            <nav className={classes.Navigation}>
+                <Logo />
+                <button className={classes.Button}>
+                    Favorites <span>{this.props.favoriteCount}</span>
+                </button>
+            </nav>
+        );
+    }
 };
 
-export default navigation;
+export default Navigation;

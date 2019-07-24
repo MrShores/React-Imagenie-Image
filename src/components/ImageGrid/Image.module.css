@@ -1,5 +1,10 @@
 .Image {
     padding: 15px;
+    transition: opacity 80ms ease-out;
+}
+
+.Hide {
+    opacity: 0;
 }
 
 .Image img {
