@@ -9,14 +9,10 @@ const detailsInfo = (props) => {
 
     return (
         <Spring
-            from={{
-                opacity: props.show ? 0 : 1,
-                bottom: props.show ? '-100px' : '0'}}
-            to={{
-                opacity: props.show ? 1 : 0,
-                bottom: props.show ? '0' : '-100px'}}>
-            {props => (
-                <div className={classes.DetailsInfo} style={props}>
+            from={{bottom: props.show ? '-108px' : '0'}}
+            to={{bottom: props.show ? '0' : '-108px'}}>
+            {styles => (
+                <div className={classes.DetailsInfo} style={styles}>
                     <h3>{image.name}</h3>
                     <a className={classes.At}
                         href={`https://unsplash.com/${image.at}`}

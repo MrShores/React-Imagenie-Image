@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
-
+// Data
+import imageData from './assets/data/unsplash-data.js';
+// Components
 import Navigation from './components/Navigation/Navigation';
 import ImageGrid from './components/ImageGrid/ImageGrid';
 import DetailsModal from './components/DetailsModal/DetailsModal';
+import Aux from './hoc/Auxiliary';
 
-import imageData from './assets/data/unsplash-data.js';
 
 class App extends Component {
 
@@ -13,13 +15,19 @@ class App extends Component {
         images: imageData,
         showDetails: false,
         doDetailsClosing: false,
-        detailImage: null,
+        activeImage: null,
         activeImageID: null,
         imageNode: null,
-        favorites: [],
+        favorites: ["2VXRa5gvpxc"],
     }
 
     imageClickHandler = (id, imageRef) => {
+
+        if( this.state.showDetails ){ // An image is open 
+            this.detailsCloseClick();
+            return;
+        }
+
         let image = this.state.images.find((element) => {
             if( element.id === id ){
                 return true;
@@ -32,10 +40,25 @@ class App extends Component {
 
         this.setState({
             showDetails: true,
+            activeImage: image,
             activeImageID: id,
-            detailImage: image,
             imageNode: imageNode,
         });
+    }
+
+    favoriteImageHandler = () => {
+        // If id is not alread in Favorites
+        if( this.state.favorites.indexOf(this.state.activeImageID) ){
+            // Add to state.favorites
+            this.setState((state, props) => {
+                return {
+                    favorites: [
+                        ...state.favorites,
+                        state.activeImageID
+                    ]
+                };
+            });
+        }
     }
 
     detailsCloseClick = () => {
@@ -43,16 +66,20 @@ class App extends Component {
     }
 
     detailsClosed = () => {
-        console.log('[App] detailsClosed');
         this.setState({
-            // Details states
-            showDetails: false,
-            doDetailsClosing: false,
             // Image related
+            activeImage: null,
             activeImageID: null,
-            detailImage: null,
+            activeImageRef: null,
             imageNode: null,
         });
+        setTimeout(() => {
+            this.setState({
+                // Details states
+                showDetails: false,
+                doDetailsClosing: false,
+            });
+        }, 50);
     }
 
     render(){
@@ -66,17 +93,19 @@ class App extends Component {
                     imageClick={this.imageClickHandler} />
 
                 { this.state.showDetails ? (
-                    <div className="DetailsCover" onClick={this.detailsCloseClick}></div>
-                ) : null}
-
-                { this.state.showDetails ? (
-                    <DetailsModal
-                        show={this.state.showDetails}
-                        doClosing={this.state.doDetailsClosing}
-                        image={this.state.detailImage}
-                        imageNode={this.state.imageNode}
-                        closeClick={this.detailsCloseClick}
-                        onDestroyed={this.detailsClosed} />
+                    <Aux>
+                        {/*
+                        <div className="DetailsCover" onClick={this.detailsCloseClick}></div>
+                        */}
+                        <DetailsModal
+                            show={this.state.showDetails}
+                            doClosing={this.state.doDetailsClosing}
+                            image={this.state.activeImage}
+                            imageNode={this.state.imageNode}
+                            closeClick={this.detailsCloseClick}
+                            favoriteClick={this.favoriteImageHandler}
+                            onDestroyed={this.detailsClosed} />
+                    </Aux>
                 ) : null}
                 
 {/*

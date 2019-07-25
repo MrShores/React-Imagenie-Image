@@ -11,7 +11,8 @@ const imageGrid = (props) => {
                 id={image.id}
                 hide={image.id === props.activeImageID}
                 thumb={image.images.thumb}
-                click={props.imageClick} />
+                click={props.imageClick}
+                imageVisible={props.imageVisible} />
         );
     });
 

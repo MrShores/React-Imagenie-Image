@@ -13,10 +13,14 @@ class Navigation extends Component {
 
     render() {
    
+        const cssClasses = this.props.favoriteCount === 0
+            ? [classes.Button]
+            : [classes.Button, classes.HasFavorites]
+
         return (
             <nav className={classes.Navigation}>
                 <Logo />
-                <button className={classes.Button}>
+                <button className={cssClasses.join(' ')}>
                     Favorites <span>{this.props.favoriteCount}</span>
                 </button>
             </nav>

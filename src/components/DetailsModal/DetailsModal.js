@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classes from './DetailsModal.module.css';
 import { Transition, Spring } from 'react-spring/renderprops';
+// import { easeBounceOut } from 'd3-ease';
 import DetailsInfo from './DetailsInfo';
 import Aux from '../../hoc/Auxiliary';
 
@@ -47,6 +48,7 @@ class DetailsModal extends Component {
         let imageNode = null;
         let start = {};
         let end = {};
+        let leave = {};
 
         const padding = this.state.winWidth < 1000 ? 10 : 15;
 
@@ -58,13 +60,16 @@ class DetailsModal extends Component {
                 top: imageNode.y + padding,
                 width: imageNode.width - padding * 2,
                 height: imageNode.height - padding * 2,
+                boxShadow: '0 2px 5px -2px rgba(0,0,0,0.5)',
             };
             end = {
                 left: (this.state.winWidth - 400) / 2,
                 top: (this.state.winHeight - 266) / 2 - 25,
                 width: 400,
                 height: 266,
+                boxShadow: '0 12px 20px 0px rgba(0,0,0,0.6)',                
             };
+            leave = start;
         }
 
         return (
@@ -72,7 +77,8 @@ class DetailsModal extends Component {
                 items={show}
                 from={start}
                 enter={end}
-                leave={start}
+                leave={leave}
+                config={{clamp: true}}
                 onDestroyed={this.props.onDestroyed}>
                 {trans => trans && (props => (
                     <div className={classes.DetailsModal} style={props}>

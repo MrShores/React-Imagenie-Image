@@ -4,8 +4,8 @@
     overflow: hidden;
     width: 400px;
     height: 266px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.3),
-                0 12px 20px rgba(0,0,0,0.2);
+    /* opacity: 0; */
+    box-shadow: 0 12px 20px rgba(0,0,0,0.2);
 }
 
 .DetailsModal img {
@@ -17,7 +17,6 @@
     height: auto;
     display: block;
 }
-
 
 .Close {
     position: absolute;
