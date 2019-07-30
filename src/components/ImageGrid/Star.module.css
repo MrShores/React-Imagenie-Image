@@ -1,0 +1,8 @@
+.Star {
+    font-size: 32px;
+    color: white;
+    line-height: 1;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}

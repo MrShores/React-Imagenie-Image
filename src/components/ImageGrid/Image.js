@@ -12,25 +12,40 @@ class Image extends Component {
         this.imageRef = React.createRef();
     }
 
-    shouldComponentUpdate = (nextProps, nextState) => {
-        return nextProps.hide !== this.props.hide;
+    componentDidMount(){
+        this.props.imageMount(this.props.image.id, this.imageRef);
     }
 
+    /**
+     * Click Handler
+     * Pass image ID and ref back up to <App> (through <ImageGrid>)
+     */
     clickHandler = () => {
-        this.props.click(this.props.id, this.imageRef);
+        if( !this.props.active ){
+            this.props.click(this.props.image.id);
+        }
     }
 
+    /**
+     * Render
+     */
     render(){
 
-        const cssClasses = this.props.hide
-            ? [classes.Image, classes.Hide]
-            : [classes.Image];
+        const cssClasses = [classes.Image];
+        if( this.props.active ){
+            cssClasses.push(classes.Active);
+        }
+        if( this.props.favorite ){
+            cssClasses.push(classes.IsFavorite);
+        }
 
         return (
             <div className={cssClasses.join(' ')}
                 ref={this.imageRef}
                 onClick={this.clickHandler}>
-                <img src={this.props.thumb} alt="" />
+                <div className={classes.ImageInner}>
+                    <img src={this.props.image.images.thumb} alt="" />
+                </div>
             </div>
         );
     }

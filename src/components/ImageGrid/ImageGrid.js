@@ -8,11 +8,11 @@ const imageGrid = (props) => {
         return (
             <Image
                 key={image.id}
-                id={image.id}
-                hide={image.id === props.activeImageID}
-                thumb={image.images.thumb}
+                image={image}
+                active={props.activeImages.includes(image.id)}
+                favorite={props.favorites.includes(image.id)}
                 click={props.imageClick}
-                imageVisible={props.imageVisible} />
+                imageMount={props.imageMount} />
         );
     });
 

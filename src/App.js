@@ -5,82 +5,143 @@ import imageData from './assets/data/unsplash-data.js';
 // Components
 import Navigation from './components/Navigation/Navigation';
 import ImageGrid from './components/ImageGrid/ImageGrid';
-import DetailsModal from './components/DetailsModal/DetailsModal';
-import Aux from './hoc/Auxiliary';
-
+import ImageModals from './components/ImageModals/ImageModals';
 
 class App extends Component {
 
     state = {
         images: imageData,
-        showDetails: false,
-        doDetailsClosing: false,
-        activeImage: null,
-        activeImageID: null,
-        imageNode: null,
+        imageNodes: {},
+        activeImages: [],
+        activeImageModals: [],
         favorites: ["2VXRa5gvpxc"],
     }
 
-    imageClickHandler = (id, imageRef) => {
+    /* Handlers
+    -------------------------------------------------------------------------*/
 
-        if( this.state.showDetails ){ // An image is open 
-            this.detailsCloseClick();
-            return;
-        }
-
-        let image = this.state.images.find((element) => {
-            if( element.id === id ){
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        const imageNode = imageRef.current;
-
-        this.setState({
-            showDetails: true,
-            activeImage: image,
-            activeImageID: id,
-            imageNode: imageNode,
+    /**
+     * Populate refs when each <Image> mounts
+     */
+    populateImageNode = (imageID, imageRef) => {
+        this.setState(state => {
+            const nodes = state.imageNodes;
+            nodes[imageID] = imageRef.current;
+            return {
+                imageNodes: nodes
+            };
         });
     }
 
-    favoriteImageHandler = () => {
-        // If id is not alread in Favorites
-        if( this.state.favorites.indexOf(this.state.activeImageID) ){
-            // Add to state.favorites
-            this.setState((state, props) => {
-                return {
-                    favorites: [
-                        ...state.favorites,
-                        state.activeImageID
-                    ]
-                };
-            });
-        }
+    imageClickHandler = (imageID) => {
+        this.addActiveImage(imageID);
+        this.addActiveImageModal(imageID);
     }
 
-    detailsCloseClick = () => {
-        this.setState({doDetailsClosing: true});
-    }
-
-    detailsClosed = () => {
-        this.setState({
-            // Image related
-            activeImage: null,
-            activeImageID: null,
-            activeImageRef: null,
-            imageNode: null,
-        });
+    closeImageModalHandler = (imageID, duration) => {
         setTimeout(() => {
-            this.setState({
-                // Details states
-                showDetails: false,
-                doDetailsClosing: false,
-            });
-        }, 50);
+            this.removeActiveImage(imageID);
+            setTimeout(() => {
+                this.removeActiveImageModal(imageID);
+            }, duration + 1000);
+        }, duration);
     }
+
+    favoriteImageHandler = (imageID) => {
+        // If favorite, remove
+        if( this.state.favorites.includes(imageID) ){
+            this.unfavoriteImage(imageID);
+        } else { // Add to favorites
+            this.favoriteImage(imageID);
+        }
+    }
+
+    /* Methods / Utilities
+    -------------------------------------------------------------------------*/
+
+    /**
+     * Add imageID to activeImages
+     */
+    addActiveImage = (imageID) => {
+        // Update state if is not already included
+        if( !this.state.activeImages.includes(imageID) ){
+            const activeImages = [
+                ...this.state.activeImages,
+                imageID
+            ];
+            this.setState({activeImages: activeImages});
+        }
+    }
+
+    /**
+     * Remove imageID from activeImages
+     */
+    removeActiveImage = (imageID) => {
+        // Update state if is already included
+        if( this.state.activeImages.includes(imageID) ){
+            const activeImages = this.state.activeImages.filter(
+                item => item !== imageID
+            )
+            this.setState({activeImages: activeImages});
+        }
+    }
+
+    /**
+     * Add imageID to activeImageModals
+     */
+    addActiveImageModal = (imageID) => {
+        // Update state if is not already included
+        if( !this.state.activeImageModals.includes(imageID) ){
+            const activeImageModals = [
+                ...this.state.activeImageModals,
+                imageID
+            ];
+            this.setState({activeImageModals: activeImageModals});
+        }
+    }
+
+    /**
+     * Remove imageID from activeImageModals
+     */
+    removeActiveImageModal = (imageID) => {
+        // Update state if is already included
+        if( this.state.activeImageModals.includes(imageID) ){
+            const activeImageModals = this.state.activeImageModals.filter(
+                item => item !== imageID
+            )
+            this.setState({activeImageModals: activeImageModals});
+        }
+    }
+
+    /**
+     * Favorite imageID
+     */
+    favoriteImage = (imageID) => {
+        // Update state if is not already included
+        if( !this.state.favorites.includes(imageID) ){
+            const favs = [
+                ...this.state.favorites,
+                imageID
+            ];
+            this.setState({favorites: favs});
+        }
+    }
+
+    /**
+     * Remove imageID from favorites
+     */
+    unfavoriteImage = (imageID) => {
+        // Update state if is already included
+        if( this.state.favorites.includes(imageID) ){
+            const favs = this.state.favorites.filter(
+                item => item !== imageID
+            )
+            this.setState({favorites: favs});
+        }
+    }
+
+    /* Render
+    -------------------------------------------------------------------------*/
 
     render(){
         return (
@@ -89,27 +150,20 @@ class App extends Component {
 
                 <ImageGrid
                     images={this.state.images}
-                    activeImageID={this.state.activeImageID}
-                    imageClick={this.imageClickHandler} />
+                    activeImages={this.state.activeImages}
+                    favorites={this.state.favorites}
+                    imageClick={this.imageClickHandler}
+                    imageMount={this.populateImageNode} />
 
-                { this.state.showDetails ? (
-                    <Aux>
-                        {/*
-                        <div className="DetailsCover" onClick={this.detailsCloseClick}></div>
-                        */}
-                        <DetailsModal
-                            show={this.state.showDetails}
-                            doClosing={this.state.doDetailsClosing}
-                            image={this.state.activeImage}
-                            imageNode={this.state.imageNode}
-                            closeClick={this.detailsCloseClick}
-                            favoriteClick={this.favoriteImageHandler}
-                            onDestroyed={this.detailsClosed} />
-                    </Aux>
-                ) : null}
-                
+                <ImageModals
+                    images={this.state.images}
+                    activeImageModals={this.state.activeImageModals}
+                    favorites={this.state.favorites}
+                    imageNodes={this.state.imageNodes}
+                    closeClick={this.closeImageModalHandler}
+                    favoriteClick={this.favoriteImageHandler} />
+             
 {/*
-
                 <div>Favorites Drawer</div>
                 <div>Notification</div>
                 <div>StarAnimation</div>

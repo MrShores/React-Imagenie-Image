@@ -1,14 +1,14 @@
-.DetailsInfo {
+.Info {
     position: absolute;
     z-index: 20;
     background: white;
     padding: 10px 16px;
     width: 100%;
     height: 100px;
-    bottom: -100px;
+    bottom: -108px;
 }
 
-.DetailsInfo h3 {
+.Info h3 {
     font-size: 18px;
     line-height: 1;
     margin: 0;
@@ -49,5 +49,19 @@
     top: 20px;
     right: 20px;
     border: 0;
-    background: transparent;
+    border-radius: 50px;
+    padding: 4px 10px 5px;
+    background: #ebe8f1;
+    color: #9c80c7;
+    outline: none;
+    transition: background 0.2s ease;
+}
+
+.Favorite:hover {
+    cursor: pointer;
+}
+
+.IsFavorite {
+    background: #937cc1;
+    color: white;
 }
