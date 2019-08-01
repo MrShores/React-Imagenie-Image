@@ -5,49 +5,30 @@ import imageData from './assets/data/unsplash-data.js';
 // Components
 import Navigation from './components/Navigation/Navigation';
 import ImageGrid from './components/ImageGrid/ImageGrid';
-import ImageModals from './components/ImageModals/ImageModals';
+import ImageModal from './components/ImageModal/ImageModal';
 
 class App extends Component {
 
     state = {
         images: imageData,
-        imageNodes: {},
-        activeImages: [],
-        activeImageModals: [],
+        activeImage: null,
+        activeImageID: '',
         favorites: ["2VXRa5gvpxc"],
     }
 
     /* Handlers
     -------------------------------------------------------------------------*/
 
-    /**
-     * Populate refs when each <Image> mounts
-     */
-    populateImageNode = (imageID, imageRef) => {
-        this.setState(state => {
-            const nodes = state.imageNodes;
-            nodes[imageID] = imageRef.current;
-            return {
-                imageNodes: nodes
-            };
-        });
-    }
-
     imageClickHandler = (imageID) => {
         this.addActiveImage(imageID);
-        this.addActiveImageModal(imageID);
     }
 
-    closeImageModalHandler = (imageID, duration) => {
-        setTimeout(() => {
-            this.removeActiveImage(imageID);
-            setTimeout(() => {
-                this.removeActiveImageModal(imageID);
-            }, duration + 1000);
-        }, duration);
+    closeImageHandler = (imageID) => {
+        this.removeActiveImage(imageID);
     }
 
     favoriteImageHandler = (imageID) => {
+        console.log('[App] favoriteImageHandler');
         // If favorite, remove
         if( this.state.favorites.includes(imageID) ){
             this.unfavoriteImage(imageID);
@@ -60,30 +41,24 @@ class App extends Component {
     -------------------------------------------------------------------------*/
 
     /**
-     * Add imageID to activeImages
+     * Add imageID to activeImageID
      */
     addActiveImage = (imageID) => {
-        // Update state if is not already included
-        if( !this.state.activeImages.includes(imageID) ){
-            const activeImages = [
-                ...this.state.activeImages,
-                imageID
-            ];
-            this.setState({activeImages: activeImages});
-        }
+        const img = this.state.images.filter(img => img.id === imageID);
+        this.setState({
+            activeImageID: imageID,
+            activeImage: img[0],
+        });
     }
 
     /**
-     * Remove imageID from activeImages
+     * Remove imageID from activeImageID
      */
     removeActiveImage = (imageID) => {
-        // Update state if is already included
-        if( this.state.activeImages.includes(imageID) ){
-            const activeImages = this.state.activeImages.filter(
-                item => item !== imageID
-            )
-            this.setState({activeImages: activeImages});
-        }
+        this.setState({
+            activeImageID: '',
+            activeImage: {},
+        });
     }
 
     /**
@@ -150,19 +125,17 @@ class App extends Component {
 
                 <ImageGrid
                     images={this.state.images}
-                    activeImages={this.state.activeImages}
-                    favorites={this.state.favorites}
                     imageClick={this.imageClickHandler}
-                    imageMount={this.populateImageNode} />
+                    favorites={this.state.favorites} />
 
-                <ImageModals
-                    images={this.state.images}
-                    activeImageModals={this.state.activeImageModals}
-                    favorites={this.state.favorites}
-                    imageNodes={this.state.imageNodes}
-                    closeClick={this.closeImageModalHandler}
-                    favoriteClick={this.favoriteImageHandler} />
-             
+                {this.state.activeImageID ? (
+                    <ImageModal
+                        image={this.state.activeImage}
+                        favorites={this.state.favorites}
+                        closeClick={this.closeImageHandler}
+                        favoriteClick={this.favoriteImageHandler} />
+                ) : null}
+
 {/*
                 <div>Favorites Drawer</div>
                 <div>Notification</div>

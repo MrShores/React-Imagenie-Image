@@ -6,6 +6,8 @@
     display: flex;
     flex-wrap: wrap;
     align-content: space-between;
+    position: relative;
+    z-index: 10;
 }
 
 .ImageGrid > div {
@@ -24,12 +26,5 @@
     .ImageGrid > div {
         flex: 1 1 50%;
         max-width: 50%;
-    }
-}
-
-@media (max-width: 400px){
-    .ImageGrid > div {
-        flex: 1 1 100%;
-        max-width: 100%;
     }
 }

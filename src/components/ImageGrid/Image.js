@@ -4,19 +4,6 @@ import classes from './Image.module.css';
 class Image extends Component {
 
     /**
-     * Create DOM ref to get click x, y,
-     * and dimensions of the node
-     */
-    constructor(props) {
-        super(props);
-        this.imageRef = React.createRef();
-    }
-
-    componentDidMount(){
-        this.props.imageMount(this.props.image.id, this.imageRef);
-    }
-
-    /**
      * Click Handler
      * Pass image ID and ref back up to <App> (through <ImageGrid>)
      */
@@ -40,10 +27,8 @@ class Image extends Component {
         }
 
         return (
-            <div className={cssClasses.join(' ')}
-                ref={this.imageRef}
-                onClick={this.clickHandler}>
-                <div className={classes.ImageInner}>
+            <div className={cssClasses.join(' ')} onClick={this.clickHandler}>
+                <div className={classes.Thumbnail}>
                     <img src={this.props.image.images.thumb} alt="" />
                 </div>
             </div>

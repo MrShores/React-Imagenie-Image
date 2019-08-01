@@ -1,26 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
 import classes from './ImageGrid.module.css';
 import Image from './Image';
 
-const imageGrid = (props) => {
+class ImageGrid extends Component {
 
-    const images = props.images.map((image, index) => {
+    render() {
+        const images = this.props.images.map((image, index) => {
+            return (
+                <Image
+                    key={image.id}
+                    image={image}
+                    favorite={this.props.favorites.includes(image.id)}
+                    click={this.props.imageClick} />
+            );
+        });
+    
         return (
-            <Image
-                key={image.id}
-                image={image}
-                active={props.activeImages.includes(image.id)}
-                favorite={props.favorites.includes(image.id)}
-                click={props.imageClick}
-                imageMount={props.imageMount} />
+            <div className={classes.ImageGrid}>
+                {images}
+            </div>
         );
-    });
-
-    return (
-        <div className={classes.ImageGrid}>
-            {images}
-        </div>
-    );
+    }
 };
 
-export default imageGrid;
+export default ImageGrid;
