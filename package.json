@@ -2,7 +2,7 @@
   "name": "imagenie",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://michaelshores.com/demos//react-imagenie",
+  "homepage": "http://michaelshores.com/demos/react-image-app",
   "dependencies": {
     "d3-ease": "^1.0.5",
     "react": "^16.8.6",
