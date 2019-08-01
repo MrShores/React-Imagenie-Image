@@ -6,3 +6,13 @@
 .Logo svg {
     display: block;
 }
+
+@media (max-width: 450px){
+    .Logo {
+        padding: 15px 0 0;
+    }
+    .Logo svg {
+        width: 130px;
+        height: 18px;
+    }
+}

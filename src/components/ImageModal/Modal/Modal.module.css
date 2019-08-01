@@ -1,3 +1,22 @@
+.Modal {
+    position: absolute;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 80%;
+    max-width: 1000px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    box-shadow: 0 6px 12px hsla(261, 32%, 10%, 1);
+    transform: translate(-50%, -50%);
+}
+
+.Photo {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 .Close {
     position: absolute;
     z-index: 50;
@@ -20,4 +39,10 @@
 
 .Close:hover {
     background: #937cc1;
+}
+
+@media (max-width: 500px){
+    .Modal {
+        width: 90%;
+    }
 }

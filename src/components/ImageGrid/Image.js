@@ -13,9 +13,6 @@ class Image extends Component {
         }
     }
 
-    /**
-     * Render
-     */
     render(){
 
         const cssClasses = [classes.Image];

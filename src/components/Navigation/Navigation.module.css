@@ -9,6 +9,7 @@
                 0 6px 12px 4px rgba(0, 0, 0, 0.05);
     padding: 0 20px;
     z-index: 500;
+    box-sizing: border-box;
 }
 
 .Button {
@@ -18,7 +19,7 @@
     position: absolute;
     border: 0;
     top: 12px;
-    right: 70px;
+    right: 32px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #9c80c7;
@@ -40,4 +41,13 @@
 .Button.HasFavorites span {
     background: #937cc1;
     color: white;
+}
+
+@media (max-width: 450px){
+    .Navigation {
+        padding-left: 12px;
+    }
+    .Button {
+        right: 8px;
+    }
 }

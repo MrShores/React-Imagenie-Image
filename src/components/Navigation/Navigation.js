@@ -20,7 +20,9 @@ class Navigation extends Component {
         return (
             <nav className={classes.Navigation}>
                 <Logo />
-                <button className={cssClasses.join(' ')}>
+                <button
+                    className={cssClasses.join(' ')}
+                    onClick={this.props.toggleFavorites}>
                     Favorites <span>{this.props.favoriteCount}</span>
                 </button>
             </nav>

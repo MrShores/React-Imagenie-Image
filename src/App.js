@@ -6,6 +6,9 @@ import imageData from './assets/data/unsplash-data.js';
 import Navigation from './components/Navigation/Navigation';
 import ImageGrid from './components/ImageGrid/ImageGrid';
 import ImageModal from './components/ImageModal/ImageModal';
+import FavoritesDrawer from './components/FavoritesDrawer/FavoritesDrawer';
+// React Spring
+import { Transition } from 'react-spring/renderprops';
 
 class App extends Component {
 
@@ -13,28 +16,8 @@ class App extends Component {
         images: imageData,
         activeImage: null,
         activeImageID: '',
-        favorites: ["2VXRa5gvpxc"],
-    }
-
-    /* Handlers
-    -------------------------------------------------------------------------*/
-
-    imageClickHandler = (imageID) => {
-        this.addActiveImage(imageID);
-    }
-
-    closeImageHandler = (imageID) => {
-        this.removeActiveImage(imageID);
-    }
-
-    favoriteImageHandler = (imageID) => {
-        console.log('[App] favoriteImageHandler');
-        // If favorite, remove
-        if( this.state.favorites.includes(imageID) ){
-            this.unfavoriteImage(imageID);
-        } else { // Add to favorites
-            this.favoriteImage(imageID);
-        }
+        favorites: ["2VXRa5gvpxc", "pazM9TQJ2Ck"],
+        showFavorites: false,
     }
 
     /* Methods / Utilities
@@ -115,32 +98,98 @@ class App extends Component {
         }
     }
 
+    toggleFavoritesDrawer = () => {
+        const showFavorites = this.state.showFavorites;
+        this.setState({
+            showFavorites: !showFavorites
+        });
+    }
+
+    closeFavoritesDrawer = () => {
+        this.setState({
+            showFavorites: false
+        });
+    }
+
+    /* Handlers
+    -------------------------------------------------------------------------*/
+
+    imageClickHandler = (imageID) => {
+        this.addActiveImage(imageID);
+    }
+
+    closeImageHandler = (imageID) => {
+        this.removeActiveImage(imageID);
+    }
+
+    favoriteImageHandler = (imageID) => {
+        // If favorite, remove
+        if( this.state.favorites.includes(imageID) ){
+            this.unfavoriteImage(imageID);
+        } else { // Add to favorites
+            this.favoriteImage(imageID);
+        }
+    }
+
     /* Render
     -------------------------------------------------------------------------*/
 
     render(){
+
+        const showImageModal = this.state.activeImageID !== '';
+
         return (
             <div className="App">
-                <Navigation favoriteCount={this.state.favorites.length} />
+                <Navigation
+                    favoriteCount={this.state.favorites.length}
+                    toggleFavorites={this.toggleFavoritesDrawer} />
 
                 <ImageGrid
                     images={this.state.images}
                     imageClick={this.imageClickHandler}
                     favorites={this.state.favorites} />
 
-                {this.state.activeImageID ? (
-                    <ImageModal
-                        image={this.state.activeImage}
-                        favorites={this.state.favorites}
-                        closeClick={this.closeImageHandler}
-                        favoriteClick={this.favoriteImageHandler} />
-                ) : null}
+                <Transition
+                    items={showImageModal}
+                    from={{opacity: 0}}
+                    enter={{opacity: 1}}
+                    leave={{opacity: 0}}
+                    config={showImageModal ? {} : {duration: 200}}
+                    native>
+                    {show => show && (style => (
+                        <ImageModal
+                            show={showImageModal}
+                            style={style}
+                            image={this.state.activeImage}
+                            favorites={this.state.favorites}
+                            closeClick={this.closeImageHandler}
+                            favoriteClick={this.favoriteImageHandler} />
+                    ))}
+                </Transition>
 
-{/*
-                <div>Favorites Drawer</div>
-                <div>Notification</div>
-                <div>StarAnimation</div>
-*/}
+                <Transition
+                    items={this.state.showFavorites}
+                    from={{
+                        opacity: 0,
+                        transform: 'translateY(-50px)'}}
+                    enter={{
+                        opacity: 1,
+                        transform: 'translateY(0)'}}
+                    leave={{
+                        opacity: 0,
+                        transform: 'translateY(-80px)'}}
+                    native>
+                    {show => show && (style => (
+                        <FavoritesDrawer
+                            show={this.state.showFavorites}
+                            style={style}
+                            images={this.state.images}
+                            favorites={this.state.favorites}
+                            favoriteClick={this.favoriteImageHandler}
+                            closeFavorites={this.closeFavoritesDrawer} />
+                    ))}
+                </Transition>
+                
             </div>
         );
     }
